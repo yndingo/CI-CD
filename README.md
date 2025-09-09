@@ -28,11 +28,11 @@
 
 Для данного проекта я использую 3 ветки:
 
- main - содержит только описание проекта
+ main - содержит только описание проекта и детализация его реализации
  
- kubernetes - сборка приложения используя docker-compose
+ kubernetes - код сборки приложения используя docker-compose
  
- infrastructure - развертывание приложения используя HELM charts, Argo cd, monitoring
+ infrastructure - код развертывания приложения используя HELM charts, Argo cd, monitoring
 
 
 Описания:

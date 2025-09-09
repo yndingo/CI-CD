@@ -58,7 +58,7 @@ SonarQube для анализа кода.
 
 7. правлю код по рекомендации SONARQUBE
 
-<Center class="h-100" v-else></Center>
+```<Center class="h-100" v-else></Center>
 			заменил на
 			<div class="h-100" style="text-align:center" v-else></div>
 		<Center v-if="loading" class="mx-2"></Center>
@@ -84,7 +84,7 @@ SonarQube для анализа кода.
 			<em class="fas fa-shopping-cart"></em>
 		<img src="@/assets/logo.png" style="margin-right: 15px; height: 57px;"/>Пельменная №2</router-link>
 			заменил на
-			<img src="@/assets/logo.png" style="margin-right: 15px; height: 57px;" alt="Momo-store"/>Пельменная №2</router-link>
+			<img src="@/assets/logo.png" style="margin-right: 15px; height: 57px;" alt="Momo-store"/>Пельменная №2</router-link>```
                               
 
 

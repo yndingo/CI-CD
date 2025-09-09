@@ -75,6 +75,8 @@ Settings - Repositories - connect repo
 20.8 подключаю приложение
 Applications - new app / create application - edit as yaml - вставляю из application.txt (заранее подготовленный ямл) - save - create
 
+https://github.com/yndingo/CI-CD/blob/main/Argo%20cd/application%20-%20Copy.txt
+
 ![Argo CD](img/28.png?raw=true "Title")
 
 Выпуск сертификата примерно до 5 минут занимает, да бывает быстро за 1 минуту, но была один раз задержка на 5 минут.

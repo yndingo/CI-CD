@@ -15,3 +15,4 @@ NODE_ENV=production VUE_APP_API_URL=http://localhost:8081 npm run serve
 go run ./cmd/api
 go test -v ./... 
 ```
+

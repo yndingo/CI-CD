@@ -3,20 +3,21 @@
 Я по удаленному имени иду на сайт, он резолвится по днс и днс яндекса говорит это вот этот айпи, на этом айпи я стучусь на 80 порт, там отвечает http-server и кидает ресурсы локально развернутого фронта на данном айпи, попутно часть ресурсов запрашивается у бекенда в моем случае локально развернутый фронт обращается по имени в днс сервис днс его шлет на айпи где развернут бекенд
 
 1. ЛОКАЛЬНЫЙ ЗАПУСК Backend
-	В начале надо запустить бекенд, так как фронт может занять используемый бекендом порт 8081 и бекенд не запустится
-	
-	cd /momo-store/backend
-	
-	go run ./cmd/api
 
-2. ЛОКАЛЬНЫЙ ЗАПУСК Frontend
+		В начале надо запустить бекенд, так как фронт может занять используемый бекендом порт 8081 и бекенд не запустится
+	
+		cd /momo-store/backend
+	
+		go run ./cmd/api
+
+3. ЛОКАЛЬНЫЙ ЗАПУСК Frontend
 	В начале надо запустить бекенд, так как фронт может занять используемый бекендом порт 8081 и бекенд не запустится
 	
-	cd /momo-store/frontend
+		cd /momo-store/frontend
 	
-	npm install
+		npm install
 	
-	NODE_ENV=production VUE_APP_API_URL=http://std-int-005-06.praktikum-services.tech:8081 npm run serve
+		NODE_ENV=production VUE_APP_API_URL=http://std-int-005-06.praktikum-services.tech:8081 npm run serve
 		В данном случае "serve" использую встроенный в приложение веб-сервер. При запуске данной команды на данном айпи адресе виртуальной машины поднимется веб сервер
 		
 		VUE_APP_API_URL - это адрес доступности сервиса бекенд
@@ -28,17 +29,18 @@
 				Тут важно используемый порт 8082
 				и доп переход /momo-store/
 
-	Следовательно фронт доступен по имени, так как яндекс сделал нам виртуальные станции с именами
-	http://std-int-005-06.praktikum-services.tech:8082/momo-store/
-	или если доступен только айпи адрес
+		Следовательно фронт доступен по имени, так как яндекс сделал нам виртуальные станции с именами
+		http://std-int-005-06.praktikum-services.tech:8082/momo-store/
+		или если доступен только айпи адрес
 		Узнать внешний адрес виртуальной машины
 			curl ifconfig.me
 				62.84.114.117
 			http://62.84.114.117:8082/momo-store/
 
 Дополнительно альтернативно можно в начале сформировать сборку фронта
-	NODE_ENV=production VUE_APP_API_URL=http://std-int-005-06.praktikum-services.tech:8081 npm run build
-Затем запустить http-server указав путь к папке/сборке фронта "dist"
+	
+ 	NODE_ENV=production VUE_APP_API_URL=http://std-int-005-06.praktikum-services.tech:8081 npm run build
+	Затем запустить http-server указав путь к папке/сборке фронта "dist"
 	sudo http-server /home/student/momo-store/frontend/dist/ -p 80 --proxy http://localhost:8081
 		Если с http-server в проекте фронта из vue.config где описан devServer.proxy не удалить /momo-store/ то тогда идет поиск папки /momo-store/
 		Надо создать папку momo-store в dist, и скопировать туда данные dist, то тогда данные появляются

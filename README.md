@@ -82,4 +82,23 @@ https://github.com/yndingo/CI-CD/tree/main/monitoring
 
 
 
+В репозитории используется переменные которые необходимо определить до начала развертывания.
+DEV_HOST - адрес/имя хоста для развертывания приложения
+DEV_USER - имя пользователя для авторизации на хосте
+dockerconfigjson - json для доступа в container registry gitlab из под docker compose
+dockerconfigjson_helm - json для доступа в container registry gitlab для helm чартов
+kubeconfig 	- статический ключ для доступа и выкатки релизов на k8s (kubernetes)
+NEXUS_REPO_URL - адрес репозитория нексус
+NEXUS_REPO_USER - логин для авторизации в нексус
+NEXUS_REPO_PASS - пароль для авторизации в нексус
+SONARQUBE_URL - адрес платформы для анализа кода сонаркуб
+SONAR_LOGIN_BACKEND - ключ для проекта бекенд в сонаркуб
+SONAR_LOGIN_FRONTEND - ключ для проекта фронта в сонаркуб
+SONAR_PROJECT_KEY_BACKEND - айди репозитория бекенд в сонаркуб
+SONAR_PROJECT_KEY_FRONTEND - айди репозитория фронта в сонаркуб
+SSH_KNOWN_HOSTS - записываются отпечатки всех серверов, которые вы посещаете и не позволяет сливать пароли и секретные ключи, если отпечаток не совпал. Нужен для авторизации на хосте для развертывания приложения
+SSH_PRIVATE_KEY - ключ для подключения к хосту/Виртуальной машине
+
+
+
 

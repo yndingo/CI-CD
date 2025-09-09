@@ -40,9 +40,17 @@
 
 https://github.com/yndingo/CI-CD/tree/main/local%20start
 
-2. ЛОКАЛЬНЫЙ ЗАПУСК ДОКЕР
+2. локальный запуск докер
 
+https://github.com/yndingo/CI-CD/tree/main/local%20docker
 
+3. локальный запуск докер компоуз
+
+https://github.com/yndingo/CI-CD/tree/main/local%20docker%20compose 
+
+4. запуск докер компоуз на гитлаб и исправление ошибок найденных с помощью SONARQUBE
+
+https://github.com/yndingo/CI-CD/tree/main/docker%20compose%20gitlab%20and%20fix%20errors
 
 
 

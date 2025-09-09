@@ -27,17 +27,19 @@ SonarQube для анализа кода.
 	    https://nexus.praktikum-services.tech/
 	
 данные которые завести в гитлаб для подключения
+
   		NEXUS_REPO_URL = https://nexus.praktikum-services.tech
   		NEXUS_REPO_USER = std-int-005-006
   		NEXUS_REPO_PASS = 
 
 Завел 2 новых проекта - raw, для архива, параметры по умолчанию
   		std-int-005-006-backend-diplom
-		  std-int-005-006-frontend-diplom
+		std-int-005-006-frontend-diplom
 
 Подключаю тесты
 	    1. на сайте sonarqube.praktikum-services.ru создал 2 новых проекта для фронта и бекенда
 	    2. на сайте gitlab.praktikum-services.ru в проекте диплома завел переменные для подключения к виртуальной машине и к sonarqube
+
       SONARQUBE_URL = https://sonarqube.praktikum-services.ru
       SONAR_PROJECT_KEY_BACKEND = 05_MuzafinII_backend_diplom
       SONAR_LOGIN_BACKEND = 

@@ -1,0 +1,56 @@
+# values.yaml
+
+momo-backend: # Это имя чарта из dependencies
+  replicas: 2
+  revisionHistoryLimit: 12
+  strategy: RollingUpdate
+  maxUnavailable: 1
+  maxSurge: 20%
+  imagePullPolicy: IfNotPresent
+  # Вместо latest правильнее использовать версию .Chart.AppVersion в шаблоне
+  image: gitlab.praktikum-services.ru:5050/std-int-005-006/momo-store/momo-backend
+  tag: 1.0.2359432 
+  service:
+    port: 8081
+    name: momo-backend
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 256Mi
+      cpu: 200m
+  vpa:
+    minAllowed:
+      cpu: 0m
+      memory: 0Mi
+    maxAllowed:
+      cpu: 1
+      memory: 500Mi
+
+momo-frontend: # Это имя чарта из dependencies
+  replicas: 2
+  revisionHistoryLimit: 12
+  imagePullPolicy: IfNotPresent
+  strategy: Recreate
+  image: gitlab.praktikum-services.ru:5050/std-int-005-006/momo-store/momo-frontend
+  tag: 1.0.2359432
+  port: 80
+  port-backend: 8081
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "100m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+  proxy_pass: http://momo-backend
+  ingress:
+    host: momo.std-int-005-06.su
+    secretName: momo-std-int-005-006-k8s-tls-secret
+    rules:
+      backend:
+        service:
+          name: momo-frontend
+          port: 80
+

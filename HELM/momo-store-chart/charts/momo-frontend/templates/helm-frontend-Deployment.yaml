@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  # сохранение историй ревизий
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  # Стратегия развёртывания. Recreate — удалит сначала все старые Pod'ы 
+  # Есть и более гибкая стратегии, например, RollingUpdate, которая будет обновлять Pod'ы порциями  
+  strategy:
+    type: {{ .Values.strategy }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    # шаблон для создания Pod'ов
+    spec:
+      containers:
+        #- image: {{ .Values.image }}:{{ .Values.tag }}
+        - image: {{ .Values.image }}:{{ .Chart.AppVersion }}        
+          name: {{ .Chart.Name }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          resources:
+            requests:
+              memory: "{{ .Values.resources.requests.memory }}"
+              cpu: "{{ .Values.resources.requests.cpu }}"
+            limits:
+              memory: "{{ .Values.resources.limits.memory }}"
+              cpu: "{{ .Values.resources.limits.cpu }}"
+          env:
+          ports:
+            - name: {{ .Chart.Name }}
+              containerPort: {{ .Values.port }}
+      # чтобы Кубер мог скачивать образы из нашего GitLab Registry  
+      imagePullSecrets:
+        - name: docker-config-secret

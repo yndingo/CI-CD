@@ -1,0 +1,6 @@
+namespace: std-int-005-06-kuber-diplom-momo-store
+ingress:
+  # для данного адреса надо создать отдельную ресурсную запись
+  host: prometheus.std-int-005-06.su
+  # создастся автоматически
+  secretName: prometheus-std-int-005-006-k8s-tls-secret

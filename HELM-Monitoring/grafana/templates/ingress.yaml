@@ -1,0 +1,32 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  # namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: grafana
+  annotations:
+    cert-manager.io/cluster-issuer: "http01-clusterissuer"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  # В кластере может быть несколько Ingress Controllers, мы используем NGINX
+  ingressClassName: "nginx"
+  tls:
+    - hosts:
+        - "{{ .Values.ingress.host }}"
+      secretName: {{ .Values.ingress.secretName }}
+  rules:
+  # для данного адреса надо создать отдельную ресурсную запись 
+  - host: "{{ .Values.ingress.host }}"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000

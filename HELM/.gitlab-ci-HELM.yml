@@ -1,0 +1,52 @@
+stages:
+  - release
+  - deploy
+
+release-HELM-nexus:
+  stage: release
+  # image: alpine/helm:3.9.3
+  image: alpine/k8s:1.28.14
+  script:
+    # просто вывод переменных
+    - echo $VERSION
+    # - helm package --dependency-update ./momo-store-chart
+    - cd HELM
+    - helm package ./momo-store-chart --version $VERSION
+    - curl -u $NEXUS_REPO_USER:$NEXUS_REPO_PASS $NEXUS_REPO_URL/repository/std-int-005-006-helm-diplom/ --upload-file momo-store-${VERSION}.tgz
+
+deploy-HELM:
+  stage: deploy
+  # Нужно взять образ, в котором есть kubectl и создать там нужный ~/.kube/config
+  # image: gcr.io/cloud-builders/kubectl:latest
+  image: alpine/k8s:1.28.14
+  before_script:
+    # просто вывод переменных
+    - echo $VERSION
+    #- echo $kubeconfig
+    - mkdir -p ~/.kube/
+    - chmod 700 ~/.kube/    
+    #- echo "$kubeconfig" | base64 --decode > ~/.kube/config
+    - echo "$kubeconfig" | base64 -d > ~/.kube/config
+    #- cat ~/.kube/config    
+    - chmod 644 ~/.kube/config
+    #- cat ./Dockerfile-env
+    # можно устанавливать автоматически последнюю версию, но лучше держать под контролем номер версии
+    #- apk add jq
+  script:
+    # просто вывод переменных
+    - echo "---Run HELM---"
+    #----------------------------------
+    # можно устанавливать автоматически последнюю версию, но лучше держать под контролем номер версии
+    # - export BACKEND_VERSION=$(helm get values -n momo-store momo-store -o json | jq -r .backend.image.tag)
+    # - export FRONTEND_VERSION=$(helm get values -n momo-store momo-store -o json | jq -r .frontend.image.tag)
+    # - helm upgrade --dependency-update --install --atomic -n momo-store momo-store . --set backend.image.tag=$BACKEND_VERSION --set frontend.image.tag=$FRONTEND_VERSION
+    # -n <namespace-name> Указывает пространство имен Kubernetes, в котором должен быть установлен или обновлен выпуск. Если пространство имен не существует, Helm обычно создает его в процессе установки, или вы можете создать его заранее, используя kubectl create namespace namespace-name.
+    # --atomic: Этот важный флаг гарантирует, что весь процесс обновления или установки рассматривается как атомарная операция. Если какая-либо часть процесса завершается неудачей, Helm автоматически откатит все изменения к предыдущему рабочему состоянию. Это предотвращает оставление выпусков в частично развернутом или сломанном состоянии. Когда используется --atomic, флаг --wait неявно включается, что означает, что Helm будет ждать, пока все ресурсы будут готовы, прежде чем считать операцию успешной
+    # - echo ${dockerconfigjson_helm}
+    # - echo ${kubeconfig}        
+    - helm repo add momo_store_helm_repository $NEXUS_REPO_URL/repository/std-int-005-006-helm-diplom --username $NEXUS_REPO_USER --password $NEXUS_REPO_PASS
+    - helm repo update
+    - helm upgrade --install momo-store momo_store_helm_repository/momo-store --version $VERSION --namespace=std-int-005-06-kuber-diplom-momo-store --set global.dockerconfigjson=${dockerconfigjson_helm}    
+
+    
+

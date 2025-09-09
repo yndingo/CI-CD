@@ -1,0 +1,52 @@
+stages:
+  - deploy
+
+deploy-back-front-kuber:
+  stage: deploy
+  # Нужно взять образ, в котором есть kubectl и создать там нужный ~/.kube/config
+  image: gcr.io/cloud-builders/kubectl:latest
+  before_script:
+    # просто вывод переменных
+    #- echo $VERSION
+    #- echo $kubeconfig
+    - mkdir -p ~/.kube/
+    - chmod 700 ~/.kube/    
+    - echo "$kubeconfig" | base64 --decode > ~/.kube/config
+    #- cat ~/.kube/config    
+    - chmod 644 ~/.kube/config
+    #- cat ./Dockerfile-env
+  script:
+    # просто вывод переменных
+    - echo "---Run kubectl backend---"
+    #----------------------------------
+    #- echo ${DEV_USER}
+    #- echo ${DEV_HOST}
+    #- echo ${CI_REGISTRY_USER}
+    #- echo ${CI_REGISTRY_PASSWORD}
+    #- echo ${CI_REGISTRY}
+    #- echo ${CI_REGISTRY_IMAGE}
+    - echo ${dockerconfigjson}
+    #- kubectl create secret generic docker-config-secret --from-literal=.dockerconfigjson=${dockerconfigjson} --type=kubernetes.io/dockerconfigjson
+    # проверяю работу kubectl
+    - kubectl get ns
+    # создаю секрет из переменной гитлаб
+    - kubectl create secret generic docker-config-secret --from-literal=.dockerconfigjson=${dockerconfigjson} --type=kubernetes.io/dockerconfigjson --save-config --namespace std-int-005-06-kuber-diplom-momo-store --dry-run=client -o yaml | kubectl apply -f -
+    #- echo ${vault_token}
+    #- kubectl create secret generic vault --from-literal=vault_token=${vault_token}
+    #- kubectl create secret generic vault --from-literal=vault_token=${vault_token} --save-config --dry-run=client -o yaml | kubectl apply -f -
+    #- kubectl create secret generic env-secrets --from-env-file=Dockerfile-env
+    #- kubectl create secret generic env-secrets --from-env-file=Dockerfile-env --save-config --dry-run=client -o yaml | kubectl apply -f -
+    #- kubectl apply -f kubernetes/backend/kuber-backend-secrets.yaml
+    - kubectl apply --namespace std-int-005-06-kuber-diplom-momo-store -f kubernetes/backend/kuber-backend-service.yaml
+    - kubectl apply --namespace std-int-005-06-kuber-diplom-momo-store -f kubernetes/backend/kuber-backend-VPA.yaml
+    - kubectl apply --namespace std-int-005-06-kuber-diplom-momo-store -f kubernetes/backend/kuber-backend-Deployment.yaml
+    #---------------------------------- 
+    - echo "---Run kubectl frontend---"
+    #----------------------------------
+    - kubectl apply --namespace std-int-005-06-kuber-diplom-momo-store -f kubernetes/frontend/kuber-frontend-service.yaml
+    - kubectl apply --namespace std-int-005-06-kuber-diplom-momo-store -f kubernetes/frontend/kuber-frontend-ingress.yaml
+    - kubectl apply --namespace std-int-005-06-kuber-diplom-momo-store -f kubernetes/frontend/kuber-frontend-ConfigMap.yaml
+    - kubectl apply --namespace std-int-005-06-kuber-diplom-momo-store -f kubernetes/frontend/kuber-frontend-Deployment.yaml
+
+
+

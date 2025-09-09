@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: alertmanager
+data:
+  alertmanager.yml: |
+    global:
+      resolve_timeout: 1m
+      #slack_api_url: '{{ .Values.slack_hook_url }}'
+    route:
+      group_wait: 10s
+      group_interval: 30s
+      repeat_interval: 30m
+      receiver: "telegram"
+      routes:
+        - receiver: "telegram"
+          group_wait: 10s
+          match_re:
+            severity: critical|warning
+          continue: true
+    receivers:
+      - name: "telegram"
+        telegram_configs:
+          - send_resolved: true
+            bot_token: '{{ .Values.bot_token }}'
+            chat_id: {{ .Values.chat_id }}
+            #text: "{{ "{{" }} range .Alerts {{ "}}" }}{{ "{{" }} .Annotations.summary {{ "}}" }}\n{{ "{{" }} .Annotations.description }}\n{{ "{{" }} end {{ "}}" }}"
+            #message: "std-int-005-06 {{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
+            #message: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
+            message: "🚨 std-int-005-06 🚨\n--\n🔺 {{ "{{" }} range .Alerts {{ "}}" }} \n {{ "{{" }} .Status {{ "}}" }} \n {{ "{{" }} .Annotations.summary {{ "}}" }}\n{{ "{{" }} .Annotations.description }} \n {{ "{{" }} end {{ "}}" }}"
+            

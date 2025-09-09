@@ -1,0 +1,24 @@
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: {{ .Chart.Name }}
+  updatePolicy:
+    # VPA не меняет ничего, только записывает рекомендации в статус объекта VerticalPodAutoscaler
+    updateMode: "Off"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: "*"
+        minAllowed:
+          cpu: {{ .Values.vpa.minAllowed.cpu }}
+          memory: {{ .Values.vpa.minAllowed.memory }}
+        maxAllowed:
+          cpu: {{ .Values.vpa.maxAllowed.cpu }}
+          memory: {{ .Values.vpa.maxAllowed.memory }}
+        controlledResources: ["cpu", "memory"]
+        controlledValues: RequestsAndLimits

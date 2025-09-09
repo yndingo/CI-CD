@@ -1,0 +1,14 @@
+---
+apiVersion: v2
+type: application
+name: momo-store
+description: Momo Store Helm Chart Argocd Release
+
+version: 0.2.0
+appVersion: "latest"
+
+dependencies:
+  - name: momo-backend
+    version: 0.1.0
+  - name: momo-frontend
+    version: 0.1.0

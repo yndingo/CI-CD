@@ -1,0 +1,72 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  # сохранение историй ревизий
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  # Стратегия развёртывания. Recreate — удалит сначала все старые Pod'ы 
+  # Есть и более гибкая стратегии, например, RollingUpdate, которая будет обновлять Pod'ы порциями  
+  strategy:
+    type: {{ .Values.strategy }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.maxUnavailable }}
+      maxSurge: "{{ .Values.maxSurge }}"
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        # этот номер порта должен совпадать с номером порта бекенд
+        prometheus.io/port: "8081"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Chart.Name }}
+    # шаблон для создания Pod'ов
+    spec:
+      containers:
+        - image: {{ .Values.image }}:{{ .Values.tag }}
+          name: {{ .Chart.Name }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          resources:
+            requests:
+              memory: "{{ .Values.resources.requests.memory }}"
+              cpu: "{{ .Values.resources.requests.cpu }}"
+            limits:
+              memory: "{{ .Values.resources.limits.memory }}"
+              cpu: "{{ .Values.resources.limits.cpu }}"
+          ports:
+            - name: {{ .Chart.Name }}
+              containerPort: {{ .Values.service.port }}
+          livenessProbe:
+            # проверка живучести выполнит запрос HTTP GET
+            httpGet:
+              # путь к запросу в HTTP-запросе
+              path: /health
+              # порт, к которому должна подключиться проверка
+              port: {{ .Values.service.port }}
+          # livenessProbe:
+            # проверка живучести curl --fail -s http://localhost:8081/health
+            # exec:
+              # command:
+              # - curl
+              # - --fail
+              # - -silent
+              # - http://localhost:8081/health
+            # перед исполнением первой проверки подождать 15 секунд, пока стартанёт бэкенд          
+            initialDelaySeconds: 15
+            # период выполнения проверки
+            periodSeconds: 30
+            # максимальное время выполнения проверки (по умолчанию 1 раз)
+            timeoutSeconds: 5
+            # сколько раз пробовать попытку, если она провалилась (по умолчанию 1 раз)
+            failureThreshold: 6
+      # чтобы Кубер мог скачивать образы из нашего GitLab Registry  
+      imagePullSecrets:
+        - name: docker-config-secret

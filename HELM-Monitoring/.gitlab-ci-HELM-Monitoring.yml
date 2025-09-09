@@ -1,0 +1,38 @@
+stages:
+  - release
+  - deploy
+
+deploy-HELM-Monitoring:
+  stage: deploy
+  # Нужно взять образ, в котором есть kubectl и создать там нужный ~/.kube/config
+  # image: gcr.io/cloud-builders/kubectl:latest
+  image: alpine/k8s:1.28.14
+  before_script:
+    # просто вывод переменных
+    - echo $VERSION
+    #- echo $kubeconfig
+    - mkdir -p ~/.kube/
+    - chmod 700 ~/.kube/    
+    #- echo "$kubeconfig" | base64 --decode > ~/.kube/config
+    - echo "$kubeconfig" | base64 -d > ~/.kube/config
+    #- cat ~/.kube/config    
+    - chmod 644 ~/.kube/config
+    #- cat ./Dockerfile-env
+  script:
+    # просто вывод переменных
+    - echo "---Run HELM-Monitoring---"
+    #----------------------------------      
+    # Monitoring
+    # - cd HELM-Monitoring/grafana
+    # - cd HELM-Monitoring
+    # - helm upgrade --atomic --install grafana grafana --namespace=std-int-005-06-kuber-diplom-momo-store
+    # - helm upgrade --install --namespace=std-int-005-06-kuber-diplom-momo-store grafana grafana    
+    - echo "---grafana install---" 
+    # этот же namespace дополнительно задать в настройках чарта
+    - helm upgrade --install grafana ./HELM-Monitoring/grafana --namespace=std-int-005-06-kuber-diplom-momo-store
+    #---------------------------------- 
+    - echo "---prometheus install---"   
+    # этот же namespace дополнительно задать в настройках чарта
+    - helm upgrade --install prometheus ./HELM-Monitoring/prometheus --namespace=std-int-005-06-kuber-diplom-momo-store
+
+

@@ -1,10 +1,11 @@
 Логи отображаются в дашборде графаны. Поэтому в начале ее надо установить
 
 1. скачать https://gitlab.praktikum-services.ru/root/monitoring-tools/
+   
 Это все сделано на helm chart
 Понадобится helm chart grafana
 
-2. Внести изменения - вношу какой namespace использую
+3. Внести изменения - вношу какой namespace использую
 	
        grafana/values.yaml
       		namespace: std-int-005-06-kuber-diplom-momo-store

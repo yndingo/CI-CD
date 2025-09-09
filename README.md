@@ -65,12 +65,14 @@ https://github.com/yndingo/CI-CD/tree/main/VM
 https://github.com/yndingo/CI-CD/tree/main/kubernetes
 
 9. HELM
+
+https://github.com/yndingo/CI-CD/tree/main/HELM
    
-10. Argo CD
+11. Argo CD
 
-11. Мониторинг - логирование, Локи
+12. Мониторинг - логирование, Локи
 
-12. Мониторинг - Метрики, Прометеус
+13. Мониторинг - Метрики, Прометеус
 
 
 

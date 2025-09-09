@@ -62,13 +62,15 @@ https://github.com/yndingo/CI-CD/tree/main/VM
 
 7. Kubernetes - развертывание на ПЛАТНЫХ ресурсах и доменное имя
 
-8. HELM
+https://github.com/yndingo/CI-CD/tree/main/kubernetes
+
+9. HELM
    
-9. Argo CD
+10. Argo CD
 
-10. Мониторинг - логирование
+11. Мониторинг - логирование, Локи
 
-11. Мониторинг - Прометеус
+12. Мониторинг - Метрики, Прометеус
 
 
 

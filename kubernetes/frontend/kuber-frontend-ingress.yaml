@@ -1,0 +1,30 @@
+# frontend/ingress.yaml
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: momo-frontend
+  annotations:
+    cert-manager.io/cluster-issuer: "http01-clusterissuer"
+spec:
+  # В кластере может быть несколько Ingress Controllers, мы используем NGINX
+  ingressClassName: "nginx"
+  tls:
+    - hosts:
+        - "std-int-005-006.k8s.praktikum-services.tech"
+      secretName: std-int-005-006-k8s-tls-secret
+  rules:
+    - host: "std-int-005-006.k8s.praktikum-services.tech"
+      http:
+        # Для различных путей в URL можно указать различные бэкенд-сервисы
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              # Заранее создан сервис типа ClusterIP
+              # Он выступает в качестве бэкенда нашего Ingress
+              name: momo-frontend
+              port:
+                # У сервиса может быть несколько портов, указываем нужный нам
+                number: 80 

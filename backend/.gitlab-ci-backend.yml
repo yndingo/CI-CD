@@ -1,0 +1,150 @@
+stages:
+  - build
+  - test
+  - release  
+  - deploy
+
+#include:
+#  - template: Security/SAST.gitlab-ci.yml
+#заменить встроенный в GitLab SAST шаблон на более свежий:
+include:
+  remote: 'https://gitlab.com/gitlab-org/gitlab/-/raw/2851f4d5/lib/gitlab/ci/templates/Jobs/SAST.latest.gitlab-ci.yml'
+  
+variables:
+  SAST_EXCLUDED_ANALYZERS: nodejs-scan, eslint, spotbugs-sast, gosec-sast
+
+build-backend-artifact-nexus:
+  stage: build
+  image: golang:1.18-alpine3.17
+  before_script:
+  # устанавливаю необходимые пакеты
+    - apk add curl tar
+  script:
+  # создаю артефакт приложения и присваиваю ему версию по SemVer
+    - cd backend/cmd/api/
+    - go build -o momo-backend${VERSION}
+    # архивирую артефакт и копирую его в Nexus репозиторий
+    - >
+        tar czvf momo-backend-${VERSION}.tar.gz momo-backend${VERSION}
+        
+        curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-backend-${VERSION}.tar.gz "${NEXUS_REPO_URL}/repository/std-int-005-006-backend-diplom/${VERSION}/momo-backend-${VERSION}.tar.gz"
+
+build-backend-docker:
+  stage: build
+  image:
+    # Kaniko — поможет нам создать образ
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    #Отключает тот entrypoint, что был указан в образе
+    entrypoint: [""]
+  # переменные CI_REGISTRY_USER, CI_REGISTRY_PASSWORD, CI_REGISTRY генерятся Гитлабом, их задавать не надо
+  script:
+    - echo "test backend-docker"
+    #- echo $CI_REGISTRY_USER
+    #- echo $CI_REGISTRY_PASSWORD
+    - echo $CI_REGISTRY
+    # --context это указывается набор файлов который будет доступен для образа
+    # --dockerfile здесь создать образ используя докерфайл и путь к нему
+    # --destination здесь какое имя образ будет иметь
+    # --build-arg VERSION здесь указывается номер образа
+    # --cache=true включается кеширование слоев, Кеширование работает, анализируя реальное содержание слоёв файловой системы, поэтому, если версия поменялась, но файлы не изменились, будет использоваться кэш
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/backend"
+      --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/momo-backend:$CI_COMMIT_SHA"
+      --build-arg VERSION=$VERSION
+      --cache=true
+ 
+sonarqube-backend-sast:
+  stage: test
+  rules:
+    - changes:
+      - backend/**/*
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  script:   
+    - echo $SONAR_PROJECT_KEY_BACKEND
+    - echo $SONARQUBE_URL
+    - echo $SONAR_LOGIN_BACKEND
+    - cd backend
+    - > 
+        sonar-scanner
+        -Dsonar.sources=.
+        -Dsonar.projectKey=${SONAR_PROJECT_KEY_BACKEND}
+        -Dsonar.host.url=${SONARQUBE_URL}
+        -Dsonar.login=${SONAR_LOGIN_BACKEND}
+  allow_failure: true
+  needs:
+    - job: build-backend-docker
+      artifacts: true
+      optional: true
+
+unit-tests-backend:
+  stage: test
+  image: golang:1.21.1-bookworm
+  needs:
+    - job: build-backend-docker
+      artifacts: true
+      optional: true
+  script:
+    - cd backend
+    - go test -v ./...
+
+release-backend-docker:
+  variables:
+    GIT_STRATEGY: none
+    # Crane не нужен исходный код, поэтому указывается git strategy none.
+  image:
+    # Crane — поставить на нём теги, чтоб не было потом путаницы, как с использованием тега latest. 
+    name: gcr.io/go-containerregistry/crane:debug
+    entrypoint: [ "" ]
+    #Отключает тот entrypoint, что был указан в образе. Видимо, это требуется для совместимости со способом, которым gitlab запускает команды из секции script и before_script. Если в образе указан entrypoint, то при запуске контейнера запустится именно эта программа. В случае gcr.io/go-containerregistry/crane в качестве entrypoint указан /ko-app/crane. Возможно, entrypoint был отключен автором, чтобы сделать команды в script более явными.
+  cache: [ ]
+  #отключает кэш пайплайна. Поскольку на этом этапе мы не пользуемся ни артефактами предыдущих стадий, ни их сборочным кэшем, то мы не хотим тратить время и ресусы на то, чтобы его восстановить на раннере.
+  stage: release
+  before_script:
+    - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    #это авторизация в реестре образов gitlab, она нужна, чтобы crane смог добавить тег образу
+  script:
+    - crane tag $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHA $VERSION
+    #в переменной CI_REGISTRY_IMAGE - базовая часть образа при загрузке в реестр gitlab. Добавляя к нему momo-backend:$CI_COMMIT_SHA - получаем полное имя образа, загруженного на предыдущем этапе сборки
+
+deploy-backend-docker-compose:
+  stage: deploy
+  # образ докер с dind docker in docker
+  image: docker:28.2-dind
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
+    - if: $CI_COMMIT_BRANCH != "main"
+      when: always
+  before_script:
+    # просто вывод переменных
+    - echo $VERSION    
+    # - apk add --no-cache gettext
+    # основная часть 
+    - apk add openssh-client bash
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    # просто вывод переменных
+    - echo "---Run docker compose---"
+    # - echo ${DEV_USER}
+    # - echo ${DEV_HOST}
+    # - echo ${CI_REGISTRY_USER}
+    # - echo ${CI_REGISTRY_PASSWORD}
+    # - echo ${CI_REGISTRY}
+    # - echo ${CI_REGISTRY_IMAGE}
+    - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
+    # полезная команда docker context use В ней можно, после создания контекста, указать, что мы будем использовать его по умолчанию для всех последующих команд docker
+    - docker context use remote
+    - docker info  # Verify Docker is running - SSH_KNOWN_HOSTS если не задать пойдет ошибка на docker.example.com
+    # docker login нужно делать после создания контекста, и именно в этом новом контексте . Иначе docker на удалённой машине не сможет скачать образ из реестра.
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}  # Login to container registry
+    - docker-compose --context remote -f docker-compose.yml up backend -d --force-recreate # Deploy using docker compose
+
+

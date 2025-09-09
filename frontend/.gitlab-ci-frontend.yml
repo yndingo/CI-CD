@@ -1,0 +1,134 @@
+cache:
+  paths:
+    - frontend/dist/frontend # для хранения зависимостей сборки фронтенда 
+    
+stages:
+  - build
+  - test
+  - release
+  - deploy
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  
+variables:
+  SAST_EXCLUDED_ANALYZERS: gosec-sast
+
+build-frontend-artifact-nexus:
+  stage: build
+  image: node:16-alpine3.16
+  before_script:
+  # устанавливаем необходимые пакеты
+    - apk add curl tar
+  script:
+  # создаю папку приложения
+    - cd frontend
+    - npm install
+    - npx update-browserslist-db@latest
+    - npm ci --include=dev
+    - npm run build
+    # архивирую папку приложения и копирую его в Nexus репозиторий
+    - >
+        tar czvf momo-frontend-${VERSION}.tar.gz dist
+        
+        curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-frontend-${VERSION}.tar.gz "${NEXUS_REPO_URL}/repository/std-int-005-006-frontend-diplom/${VERSION}/momo-frontend-${VERSION}.tar.gz"
+
+build-frontend-docker:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
+  # переменные CI_REGISTRY_USER, CI_REGISTRY_PASSWORD, CI_REGISTRY генерятся Гитлабом, их задавать не надо
+  script:
+    - echo "test frontend-frontend"
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/frontend"
+      --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/momo-frontend:$CI_COMMIT_SHA"
+      --build-arg VERSION=$VERSION
+      --cache=true
+      
+sonarqube-frontend-sast:
+  stage: test
+  rules:
+    - changes:
+      - frontend/**/*
+  image: sonarsource/sonar-scanner-cli:latest # для фронта другой образ. Его нам подготовили и просто в описании указали что использовать
+  variables:
+    #
+  script:    
+    - echo $CI_JOB_ID    
+    - echo $SONAR_PROJECT_KEY_FRONTEND
+    - echo $SONARQUBE_URL
+    - echo $SONAR_LOGIN_FRONTEND
+    - cd frontend
+    - > 
+        sonar-scanner
+        -Dsonar.sources=.
+        -Dsonar.projectKey=$SONAR_PROJECT_KEY_FRONTEND
+        -Dsonar.host.url=$SONARQUBE_URL
+        -Dsonar.login=$SONAR_LOGIN_FRONTEND
+        -Dsonar.qualitygate.wait=true
+  allow_failure: true
+  needs:
+    - job: build-frontend-docker
+      artifacts: true
+
+release-frontend-docker:
+  variables:
+    GIT_STRATEGY: none
+  image:
+    name: gcr.io/go-containerregistry/crane:debug
+    entrypoint: [ "" ]
+  cache: [ ]
+  stage: release
+  before_script:
+    - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - crane tag $CI_REGISTRY_IMAGE/momo-frontend:$CI_COMMIT_SHA $VERSION
+
+deploy-frontend-docker-compose:
+  stage: deploy
+  # образ докер с dind docker in docker
+  image: docker:28.2-dind
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
+    - if: $CI_COMMIT_BRANCH != "main"
+      when: always
+  before_script:
+    # просто вывод переменных
+    - echo $VERSION    
+    # - apk add --no-cache gettext
+    # основная часть 
+    - apk add openssh-client bash
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    #- scp ./frontend/nginx.conf ${DEV_USER}@${DEV_HOST}:.
+  script:
+    # просто вывод переменных
+    # чтобы получить кастомный nginx.conf надо туда его скопировать
+    # мне проще тогда в Dockerfile его скопировать
+    # - ssh ${DEV_USER}@${DEV_HOST} "mkdir -p ./frontend/"
+    # - scp ./frontend/nginx.conf ${DEV_USER}@${DEV_HOST}:./frontend/nginx.conf
+    - echo "---Run docker compose---"
+    # - echo ${DEV_USER}
+    # - echo ${DEV_HOST}
+    # - echo ${CI_REGISTRY_USER}
+    # - echo ${CI_REGISTRY_PASSWORD}
+    # - echo ${CI_REGISTRY}
+    # - echo ${CI_REGISTRY_IMAGE}
+    - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
+    # полезная команда docker context use В ней можно, после создания контекста, указать, что мы будем использовать его по умолчанию для всех последующих команд docker
+    - docker context use remote
+    - docker info  # Verify Docker is running - SSH_KNOWN_HOSTS если не задать пойдет ошибка на docker.example.com
+    # docker login нужно делать после создания контекста, и именно в этом новом контексте . Иначе docker на удалённой машине не сможет скачать образ из реестра.
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}  # Login to container registry
+    - docker-compose --context remote -f docker-compose.yml up frontend -d --force-recreate # Deploy using docker compose
+
+
+

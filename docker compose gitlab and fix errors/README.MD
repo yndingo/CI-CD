@@ -13,6 +13,9 @@ SonarQube для анализа кода.
 		https://sonarqube.praktikum-services.ru/
 
 1. Создал проект гитлаб
+
+![gitlab](img/3.png?raw=true "Title")
+
 2. Клонирую на локальную машину для доработки кода
 	    git clone https://gitlab.praktikum-services.ru/std-int-005-006/momo-store.git	
 3. Создал новую ветку docker-compose и запушил ее на сервер
@@ -27,12 +30,16 @@ SonarQube для анализа кода.
 
 подключаю Нексус для хранения артефактов
 	    https://nexus.praktikum-services.tech/
+
+![gitlab](img/14.png?raw=true "Title")
 	
 данные которые завести в гитлаб для подключения
 
   		NEXUS_REPO_URL = https://nexus.praktikum-services.tech
   		NEXUS_REPO_USER = std-int-005-006
   		NEXUS_REPO_PASS = 
+
+![gitlab](img/15.png?raw=true "Title")
 
 Завел 2 новых проекта - raw, для архива, параметры по умолчанию
   		std-int-005-006-backend-diplom
@@ -58,7 +65,11 @@ SonarQube для анализа кода.
 
 4. добавляю коммит и пушу в репозиторий
 
+![gitlab](img/16.png?raw=true "Title")
+
 5. правлю код по рекомендации SONARQUBE
+
+![gitlab](img/31.png?raw=true "Title")
 
 ```
 <Center class="h-100" v-else></Center>
@@ -89,7 +100,9 @@ SonarQube для анализа кода.
 			заменил на
 			<img src="@/assets/logo.png" style="margin-right: 15px; height: 57px;" alt="Momo-store"/>Пельменная №2</router-link>
 ```
-                              
+
+![gitlab](img/39.png?raw=true "Title")
+
 6. деплой на ВМ через docker context
 
-
+![gitlab](img/40.png?raw=true "Title")

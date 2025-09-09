@@ -58,6 +58,33 @@ SonarQube для анализа кода.
 
 7. правлю код по рекомендации SONARQUBE
 
+<Center class="h-100" v-else></Center>
+			заменил на
+			<div class="h-100" style="text-align:center" v-else></div>
+		<Center v-if="loading" class="mx-2"></Center>
+			заменил на
+			<div style="text-align:center" v-if="loading" class="mx-2"></div>
+		<Center></Center>
+			заменил на
+			<div style="text-align:center"></div>
+		<Center class="h-100"></Center>
+		color: white;color: black;
+			заменил на
+			color: black;
+		<script src="https://kit.fontawesome.com/a9ae183e88.js" crossorigin="anonymous"></script>
+			удалил
+		<table class="table table-hover align-middle">
+			заменил на
+			<table class="table table-hover align-middle" aria-label="bucket">
+		<template> <li...></li></template>
+			заменил на 
+			<template> <ul><li...></li></ul></template>
+		<i class="fas fa-shopping-cart"></i>
+			заменил на
+			<em class="fas fa-shopping-cart"></em>
+		<img src="@/assets/logo.png" style="margin-right: 15px; height: 57px;"/>Пельменная №2</router-link>
+			заменил на
+			<img src="@/assets/logo.png" style="margin-right: 15px; height: 57px;" alt="Momo-store"/>Пельменная №2</router-link>
                               
 
 

@@ -88,15 +88,18 @@
 
 4. Установить, я через гитлаб устанавливаю.
 Проверить, что все корректно установилось
+
 	https://prometheus.std-int-005-06.su
+
 		Если TLS не сделан, то будет писать, что есть Вероятная угроза безопасности и даже может потребуется открыть окно в безопасном режиме и там смотреть, так как браузер не будет пускать.
 
-5. Добавить сервисный аккаунт для prometheus с правами на просмотр ресурсов
+6. Добавить сервисный аккаунт для prometheus с правами на просмотр ресурсов
 Установить RBAC (Role-Based Access Control) для prometheus
 Надо помнить что сервисный аккаунт облака std-int-005-06-diplom-sa не имеет никакого отношения к сервисному аккаунту кластера кубернетес
 
 6.1 Создать файл
-	nano rbac-Role-and-Binding.yaml
+
+nano rbac-Role-and-Binding.yaml
 
     apiVersion: rbac.authorization.k8s.io/v1
     kind: Role
@@ -127,10 +130,12 @@
       apiGroup: rbac.authorization.k8s.io
 
 6.2 Применить файл
-	kubectl apply -f rbac-Role-and-Binding.yaml
+	
+kubectl apply -f rbac-Role-and-Binding.yaml
 
 6.3 Создать файл
-	nano rbac-Role-and-Binding2.yaml
+	
+nano rbac-Role-and-Binding2.yaml
 
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
@@ -162,10 +167,12 @@
       apiGroup: rbac.authorization.k8s.io
 
 6.4 Применить файл
-	kubectl apply -f rbac-Role-and-Binding2.yaml
+	
+kubectl apply -f rbac-Role-and-Binding2.yaml
 
 7. Проверить, что появился Сервисный аккаунт в кубернетес
-	    Managed Service for Kubernetes - Кластеры - открыть нужный кластер - управление доступом
+
+Managed Service for Kubernetes - Кластеры - открыть нужный кластер - управление доступом
 	
        В сервисных аккаунтах выбрать зону/пространство имен "std-int-005-06-kuber-diplom-momo-store"
       		там должна быть сервисная запись "default"

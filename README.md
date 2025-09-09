@@ -70,9 +70,11 @@ https://github.com/yndingo/CI-CD/tree/main/HELM
    
 11. Argo CD
 
-12. Мониторинг - логирование, Локи
+https://github.com/yndingo/CI-CD/tree/main/Argo%20cd
 
-13. Мониторинг - Метрики, Прометеус
+13. Мониторинг - логирование, Локи
+
+14. Мониторинг - Метрики, Прометеус
 
 
 

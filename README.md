@@ -35,3 +35,21 @@
  infrastructure - развертывание приложения используя HELM charts, Argo cd, monitoring
 
 
+Описания:
+1. как собрать и запустить бекенд и фронт локально
+
+https://github.com/yndingo/CI-CD/tree/main/local%20start
+
+2. ЛОКАЛЬНЫЙ ЗАПУСК ДОКЕР
+
+
+
+
+
+
+
+
+
+
+
+

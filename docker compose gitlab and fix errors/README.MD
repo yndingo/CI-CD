@@ -1,8 +1,13 @@
 GitLab для хранения кода, организации процесса сборки и доставки, хранения артефактов;
+
 		https://gitlab.praktikum-services.ru/
+
 Nexus для хранения артефактов сборки;
+
 		https://nexus.praktikum-services.tech/
+
 SonarQube для анализа кода.
+
 		https://sonarqube.praktikum-services.ru/
 
 1. Создал проект гитлаб

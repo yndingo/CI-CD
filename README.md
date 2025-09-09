@@ -28,6 +28,9 @@
 
 Для данного проекта я использую 3 ветки:
  main - содержит только описание проекта
+ 
  kubernetes - сборка приложения используя docker-compose
+ 
  infrastructure - развертывание приложения используя HELM charts, Argo cd, monitoring
-    
+
+

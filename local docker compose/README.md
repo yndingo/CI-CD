@@ -27,4 +27,7 @@
      docker compose up -d
 
 
+![ЛОКАЛЬНЫЙ ЗАПУСК ДОКЕР-КОМПОУЗ](img/1.png?raw=true "Title")
      
+
+![ЛОКАЛЬНЫЙ ЗАПУСК ДОКЕР-КОМПОУЗ](img/4.png?raw=true "Title")

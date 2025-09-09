@@ -56,7 +56,7 @@ SonarQube для анализа кода.
 
 4. добавляю коммит и пушу в репозиторий
 
-7. правлю код по рекомендации SONARQUBE
+5. правлю код по рекомендации SONARQUBE
 
 ```
 <Center class="h-100" v-else></Center>
@@ -88,46 +88,6 @@ SonarQube для анализа кода.
 			<img src="@/assets/logo.png" style="margin-right: 15px; height: 57px;" alt="Momo-store"/>Пельменная №2</router-link>
 ```
                               
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+6. деплой на ВМ через docker context
 
 

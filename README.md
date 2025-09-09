@@ -80,8 +80,8 @@ https://github.com/yndingo/CI-CD/tree/main/logging
 
 https://github.com/yndingo/CI-CD/tree/main/monitoring
 
-
-
+<br/>
+<br/>
 В репозитории используется переменные которые необходимо определить до начала развертывания.
 
 DEV_HOST - адрес/имя хоста для развертывания приложения

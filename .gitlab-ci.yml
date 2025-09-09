@@ -3,17 +3,7 @@ stages:
 
 variables:
   VERSION: 1.0.${CI_PIPELINE_ID}
-  
-kubernetes:
-  stage: module-pipelines
-  trigger:
-    include:
-      - 'kubernetes/.gitlab-ci-kubernetes.yml'
-    strategy: depend
-  only:
-    changes:  # как только происходит изменение в папке kubernetes, запускается дочерний пайплайн, который лежит в этой папке
-      - kubernetes/**/*
-      
+       
 HELM:
   stage: module-pipelines
   trigger:

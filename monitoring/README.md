@@ -1,4 +1,5 @@
 скачать https://gitlab.praktikum-services.ru/root/monitoring-tools/
+
 Это все сделано на helm chart
 Понадобится helm chart prometheus
 потребовалось внести изменения в бекенд - для исправлениея расчет азадержки

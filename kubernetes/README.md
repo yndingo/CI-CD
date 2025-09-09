@@ -99,6 +99,7 @@ https://yandex.cloud/ru/docs/managed-kubernetes/quickstart?from=int-console-empt
 
 9. Обновляю переменную kubeconfig в gitlab
 	Лучше сделать статический конфиг для работы с конкретным моим кластером:
+
 https://yandex.cloud/ru/docs/managed-kubernetes/operations/connect/create-static-conf
 
 ![kubernetes](img/41.png?raw=true "Title")
@@ -303,12 +304,17 @@ https://yandex.cloud/ru/docs/managed-kubernetes/operations/applications/cert-man
 
 ![kubernetes](img/91.png?raw=true "Title")
 
-21. Проверьте готовность сертификата, как будет "true" можно переходить на сайт https://momo.std-int-005-06.su/catalog
+21. Проверьте готовность сертификата, как будет "true" можно переходить на сайт
+
+https://momo.std-int-005-06.su/catalog
+
 Пока сертификат не готов при заходе на страницу будет ошибка - Вероятная угроза безопасности
 	kubectl get certificate
 
 предупреждения в работе (если есть) видны в events
 	kubectl get events
+
+
 
 
 ![kubernetes](img/92.png?raw=true "Title")

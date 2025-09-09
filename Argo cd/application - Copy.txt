@@ -1,0 +1,32 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # ArgoCD видит все установленные Helm-релизы в кластере, укажи своё имя, чтобы избежать конфликтов
+  #name: sausage-store-<student name>
+  name: momo-store-std-int-005-006
+spec:
+  #project: <имя твоего проекта в ArgoCD, посмотри в настройках в разделе Projects>
+  #создавать новые проекты не могу могу использовать только тот что есть std-int-005-006
+  project: default
+  destination:
+    #namespace: <имя твоего неймспейса в кластере Kubernetes>
+    namespace: std-int-005-06-kuber-diplom-momo-store
+    # Используй этот URL для работы с Kubernetes-кластером
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: ''
+    # Это ссылка к Helm-репозиторию с Helm-чартом
+    #repoURL: 'https://nexus.k8s.praktikum-services.tech//repository/sausage-store-<your repo>'
+    repoURL: 'https://nexus.praktikum-services.tech/repository/std-int-005-006-helm-diplom/'
+	# последняя актуальная сборка HELM
+    targetRevision: '1.0.2359483'
+    chart: momo-store
+    helm:
+      values: |
+        global:
+          dockerconfigjson: сюда вставить зашифрованный конфиг
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false

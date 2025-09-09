@@ -74,7 +74,9 @@ https://github.com/yndingo/CI-CD/tree/main/Argo%20cd
 
 13. Мониторинг - логирование, Локи
 
-14. Мониторинг - Метрики, Прометеус
+https://github.com/yndingo/CI-CD/tree/main/logging
+
+15. Мониторинг - Метрики, Прометеус
 
 
 

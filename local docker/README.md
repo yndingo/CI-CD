@@ -97,9 +97,9 @@
          работает proxy_pass http://momo-store-backend:8081;
 
 
+![ЛОКАЛЬНЫЙ ЗАПУСК ДОКЕР](img/2.png?raw=true "Title")
 
+![ЛОКАЛЬНЫЙ ЗАПУСК ДОКЕР](img/5.png?raw=true "Title")
 
-
-
-
+![ЛОКАЛЬНЫЙ ЗАПУСК ДОКЕР](img/6.png?raw=true "Title")
 

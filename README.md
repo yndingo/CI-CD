@@ -56,7 +56,7 @@ https://github.com/yndingo/CI-CD/tree/main/docker%20compose%20gitlab%20and%20fix
 
 https://github.com/yndingo/CI-CD/tree/main/Move%20IMG%20to%20S3%20(Yandex%20Object%20Storage)
 
-
+6. Виртуальная Машина - развертывание на ПЛАТНЫХ ресурсах и доменное имя
 
 
 

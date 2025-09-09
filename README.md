@@ -58,6 +58,17 @@ https://github.com/yndingo/CI-CD/tree/main/Move%20IMG%20to%20S3%20(Yandex%20Obje
 
 6. Виртуальная Машина - развертывание на ПЛАТНЫХ ресурсах и доменное имя
 
+https://github.com/yndingo/CI-CD/tree/main/VM
+
+7. Kubernetes - развертывание на ПЛАТНЫХ ресурсах и доменное имя
+
+8. HELM
+   
+9. Argo CD
+
+10. Мониторинг - логирование
+
+11. Мониторинг - Прометеус
 
 
 

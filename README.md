@@ -50,6 +50,21 @@ SemVer 2.0.0 https://semver.org/lang/ru/
 
 для инфраструктуры версия приложения изменяется вручную в чарте infrastructure/HELM/momo-store-chart/values.yaml
 
+<br/><br/>
+Инфраструктура
+
+код ---> Gitlab https://gitlab.praktikum-services.ru/
+
+helm-charts ---> Nexus https://nexus.praktikum-services.ru/
+
+анализ кода ---> SonarQube https://sonarqube.praktikum-services.ru/
+
+docker-images ---> Gitlab Container Registry https://gitlab.praktikum-services.ru/antona-zateyev/momo-store/container_registry
+
+терраформ бэкэнд и статика ---> Yandex Object Storage https://cloud.yandex.ru/services/storage
+
+продакшн ---> Yandex Managed Service for Kubernetes https://cloud.yandex.ru/services/managed-kubernetes
+
 
 <br/><br/>
 Развёртывание

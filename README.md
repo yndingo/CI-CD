@@ -76,7 +76,11 @@ docker-images ---> Gitlab Container Registry https://gitlab.praktikum-services.r
  
  kubernetes - код сборки приложения используя docker-compose. Приложение, собирается, проверяется/тестируется на ошибки, образ идет в container registry и равзертывание на ВМ.
  
+ https://github.com/yndingo/CI-CD/tree/kubernetes
+ 
  infrastructure - код развертывания приложения используя HELM charts, Argo cd, monitoring. В HELM надо указывать актуальные версии приложений backend и frontend. Для Argo cd надо указывать актуальную версию HELM чарта, содержащую в себе актуальные версии приложений backend и frontend.
+ 
+ https://github.com/yndingo/CI-CD/tree/infrastructure
 <br/><br/>
 
 Описания:

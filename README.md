@@ -124,6 +124,9 @@ https://github.com/yndingo/CI-CD/tree/main/logging
 
 https://github.com/yndingo/CI-CD/tree/main/monitoring
 
+16. Терраформ - Создаю ВМ с помощью другой ВМ.
+
+https://github.com/yndingo/CI-CD/tree/main/terraform
 
 <br/><br/>
 В репозитории используется переменные которые необходимо определить до начала развертывания.

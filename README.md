@@ -42,6 +42,12 @@
 
 Полученные образы тегируются по версиям (frontend и backend)
 
+SemVer 2.0.0 https://semver.org/lang/ru/
+мажорные и минорные версии приложения изменяются вручную в файлах backend/.gitlab-ci.yaml и frontend/.gitlab-ci.yaml в переменной VERSION
+патч-версии изменяются автоматически на основе переменной CI_PIPELINE_ID
+для инфраструктуры версия приложения изменяется вручную в чарте infrastructure/momo-store-helm/Chart.yaml
+
+
 <br/><br/>
 Развёртывание
 

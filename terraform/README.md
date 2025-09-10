@@ -150,7 +150,7 @@ https://hashicorp-releases.yandexcloud.net/terraform/
 
 ![terraform](img/11.png?raw=true "Title")
 
-24. проверка синтаксиса, если исползуется S3 bucket возможно придется реинициализировать
+24. проверка синтаксиса, если используется S3 bucket возможно придется реинициализировать
 	
          ./terraform_1.5.7 validate
 

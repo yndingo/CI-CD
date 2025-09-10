@@ -112,23 +112,23 @@ https://github.com/yndingo/CI-CD/tree/main/VM
 
 https://github.com/yndingo/CI-CD/tree/main/kubernetes
 
-9. HELM
+8. HELM
 
 https://github.com/yndingo/CI-CD/tree/main/HELM
    
-11. Argo CD
+9. Argo CD
 
 https://github.com/yndingo/CI-CD/tree/main/Argo%20cd
 
-13. Мониторинг - логирование, Локи
+10. Мониторинг - логирование, Локи
 
 https://github.com/yndingo/CI-CD/tree/main/logging
 
-15. Мониторинг - Метрики, Прометеус - исправление бекенда, для получения рабочей гистограммы задержки сигнала
+11. Мониторинг - Метрики, Прометеус - исправление бекенда, для получения рабочей гистограммы задержки сигнала
 
 https://github.com/yndingo/CI-CD/tree/main/monitoring
 
-16. Терраформ - Создаю ВМ с помощью другой ВМ.
+12. Терраформ - Создаю ВМ с помощью другой ВМ.
 
 https://github.com/yndingo/CI-CD/tree/main/terraform
 
